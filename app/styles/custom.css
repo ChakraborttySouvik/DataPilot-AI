@@ -1,0 +1,356 @@
+/* ==========================================
+   DataPilot AI - Premium SaaS Theme
+   ========================================== */
+
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Global */
+html, body, [class*="css"] {
+    font-family: 'Inter', sans-serif;
+}
+
+.stApp {
+    background: #0B1220;
+    color: #F3F4F6;
+}
+
+/* Main container */
+.block-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    max-width: 1400px;
+}
+
+/* Headings */
+h1 {
+    font-size: 2.4rem !important;
+    font-weight: 700 !important;
+    color: #FFFFFF;
+    margin-bottom: 0.2rem;
+}
+
+h2, h3 {
+    color: #F9FAFB;
+    font-weight: 600;
+}
+
+/* Caption */
+[data-testid="stCaptionContainer"] {
+    color: #9CA3AF;
+}
+
+/* Horizontal line */
+hr {
+    border: none;
+    border-top: 1px solid #1F2937;
+}
+
+/* Sidebar */
+[data-testid="stSidebar"] {
+    background: #111827;
+    border-right: 1px solid #1F2937;
+}
+
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {
+    color: white;
+}
+
+/* Buttons */
+.stButton > button {
+    width: 100%;
+    border-radius: 12px;
+    background: #2563EB;
+    color: white;
+    border: none;
+    padding: 0.65rem;
+    font-weight: 600;
+    transition: 0.25s;
+}
+
+.stButton > button:hover {
+    background: #1D4ED8;
+    transform: translateY(-2px);
+}
+
+/* File uploader */
+[data-testid="stFileUploader"] {
+    border: 2px dashed #3B82F6;
+    border-radius: 18px;
+    padding: 25px;
+    background: #111827;
+}
+
+/* Metric cards */
+[data-testid="stMetric"] {
+    background: #111827;
+    border-radius: 16px;
+    padding: 18px;
+    border: 1px solid #1F2937;
+    box-shadow: 0 8px 24px rgba(0,0,0,.25);
+    transition: .25s;
+}
+
+[data-testid="stMetric"]:hover {
+    transform: translateY(-3px);
+    border-color: #3B82F6;
+}
+
+/* Dataframes */
+[data-testid="stDataFrame"] {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #1F2937;
+}
+
+/* Expanders */
+details {
+    background: #111827;
+    border: 1px solid #1F2937;
+    border-radius: 14px;
+    margin-bottom: 14px;
+    padding: 8px;
+}
+
+/* Success */
+.stSuccess {
+    border-radius: 12px;
+}
+
+/* Warning */
+.stWarning {
+    border-radius: 12px;
+}
+
+/* Info */
+.stInfo {
+    border-radius: 12px;
+}
+
+/* Spinner */
+[data-testid="stSpinner"] {
+    color: #3B82F6;
+}
+/* ==========================================
+   Hero Section
+========================================== */
+
+.hero{
+
+padding:35px 25px;
+
+margin-bottom:30px;
+
+background:#111827;
+
+border:1px solid #1F2937;
+
+border-radius:18px;
+
+text-align:center;
+
+}
+
+.hero h1{
+
+font-size:50px;
+
+margin:10px 0;
+
+font-weight:700;
+
+}
+
+.hero p{
+
+font-size:18px;
+
+color:#9CA3AF;
+
+margin:0;
+
+}
+
+.hero-badge{
+
+display:inline-block;
+
+padding:8px 18px;
+
+border-radius:999px;
+
+background:#1E3A8A;
+
+color:#DBEAFE;
+
+font-size:14px;
+
+font-weight:600;
+
+}
+
+/*=========================================
+ Premium KPI Cards
+=========================================*/
+
+.metric-card{
+    background: linear-gradient(145deg,#111827,#1A2438);
+    border:1px solid #263244;
+    border-radius:20px;
+    padding:22px;
+    box-shadow:0 12px 30px rgba(0,0,0,.30);
+    transition:all .25s ease;
+    margin-bottom:15px;
+}
+
+.metric-card:hover{
+    transform:translateY(-6px);
+    border-color:#3B82F6;
+    box-shadow:0 18px 35px rgba(59,130,246,.18);
+}
+
+.metric-header{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+}
+
+.metric-icon{
+    font-size:26px;
+}
+
+.metric-title{
+    color:#9CA3AF;
+    font-size:14px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+.metric-value{
+    font-size:38px;
+    font-weight:800;
+    color:white;
+    line-height:1;
+}
+
+.metric-subtitle{
+    margin-top:10px;
+    color:#6B7280;
+    font-size:13px;
+    font-weight:500;
+}
+
+/* ==========================================
+   Upload Card
+========================================== */
+
+.upload-card{
+
+background:#111827;
+
+border:2px dashed #3B82F6;
+
+border-radius:20px;
+
+padding:35px;
+
+text-align:center;
+
+margin-bottom:15px;
+
+transition:.3s;
+
+}
+
+.upload-card:hover{
+
+border-color:#60A5FA;
+
+background:#131d31;
+
+}
+
+.upload-icon{
+
+font-size:48px;
+
+margin-bottom:12px;
+
+}
+
+.upload-heading{
+
+font-size:28px;
+
+font-weight:700;
+
+color:white;
+
+margin-bottom:8px;
+
+}
+
+.upload-text{
+
+color:#9CA3AF;
+
+font-size:17px;
+
+}
+/* ==========================================
+   Sidebar
+========================================== */
+
+section[data-testid="stSidebar"]{
+    background:#0F172A;
+    border-right:1px solid #1E293B;
+}
+
+.sidebar-brand{
+    text-align:center;
+    padding-top:10px;
+    padding-bottom:10px;
+}
+
+.sidebar-brand h2{
+    color:white;
+    font-size:28px;
+    font-weight:700;
+    margin-bottom:4px;
+}
+
+.sidebar-brand p{
+    color:#94A3B8;
+    font-size:14px;
+    margin:0;
+}
+
+/* Navigation */
+
+section[data-testid="stSidebar"] h3{
+    color:white;
+    margin-top:10px;
+}
+
+section[data-testid="stSidebar"] .stMarkdown p{
+    font-size:15px;
+    line-height:1.8;
+}
+
+/* Divider */
+
+section[data-testid="stSidebar"] hr{
+    border-color:#1E293B;
+}
+
+/* Sidebar metrics */
+
+section[data-testid="stSidebar"] [data-testid="stMetric"]{
+    background:#111827;
+    border-radius:12px;
+    border:1px solid #1F2937;
+}

@@ -1,42 +1,81 @@
-"""Sidebar rendering for DataPilot AI."""
-
 from __future__ import annotations
-
 import pandas as pd
 import streamlit as st
+from app.core.data_loader import load_csv
+from app.core.validators import validate_uploaded_file
+from app.core.exceptions import DataPilotError
 
-from app.core.analyzer import DatasetOverview
-from app.utils.formatting import format_bytes
 
-
-def render_sidebar(overview: DatasetOverview | None) -> None:
-    """Render the sidebar with app info and, if available, a quick
-    snapshot of the currently loaded dataset.
-
-    Args:
-        overview: The current dataset's overview metrics, or None if
-            no file has been uploaded yet.
-    """
+def render_sidebar():
     with st.sidebar:
-        st.title("DataPilot AI")
-        st.caption("Feature 1 · CSV Upload & Data Overview")
-
-        st.markdown("---")
+        
         st.markdown(
-            "**What this app does:**\n"
-            "- Upload a CSV file\n"
-            "- Validate the file\n"
-            "- Explore rows, columns & types\n"
-            "- View missing values & duplicates\n"
-            "- See a dataset summary\n"
-            "- View basic statistics"
+            """
+<div class="sidebar-brand">
+    <h2>🧭 DataPilot AI</h2>
+    <p>Business Intelligence Platform</p>
+</div>
+""",
+            unsafe_allow_html=True,
         )
 
-        st.markdown("---")
-        if overview is not None:
-            st.subheader("Quick Snapshot")
-            st.metric("Rows", f"{overview.row_count:,}")
-            st.metric("Columns", f"{overview.column_count:,}")
-            st.metric("Size", format_bytes(overview.size_bytes))
-        else:
-            st.info("Upload a CSV file to see a quick snapshot here.")
+        st.divider()
+
+        st.subheader("📂 Dataset")
+
+        uploaded_file = st.file_uploader(
+            "Upload Dataset",
+            type=["csv", "xlsx"],
+            label_visibility="collapsed",
+            help="CSV and Excel (.xlsx) files are supported.",
+        )
+
+        if uploaded_file is not None:
+
+            try:
+                validate_uploaded_file(uploaded_file)
+
+                dataframe = load_csv(uploaded_file)
+
+                st.session_state["uploaded_df"] = dataframe
+                st.session_state["uploaded_filename"] = uploaded_file.name
+
+                st.success("✅ Dataset Loaded")
+
+                st.caption(uploaded_file.name)
+                st.caption(
+                    f"{dataframe.shape[0]:,} rows • "
+                    f"{dataframe.shape[1]} columns"
+                )
+
+            except DataPilotError as error:
+                st.error(str(error))
+
+            except Exception as error:
+                st.error(f"Unexpected error: {error}")
+
+        st.divider()
+
+        page = st.radio(
+            "Navigation",
+            (
+                "🏠 Dashboard",
+                "👀 Preview",
+                "❤️ Health",
+                "🧩 Schema",
+                "📋 Summary",
+                "📈 Statistics",
+                "📊 Visualizations",
+                "🧹 Data Cleaning",
+                "🤖 AI Data Analyst",
+                "🔮 Forecast",
+                "📄 Reports (Coming Soon)",
+                "⚙️ Settings (Coming Soon)",
+            ),
+            index=0,
+            key="navigation",
+        )
+
+        st.divider()
+
+        return page

@@ -16,13 +16,21 @@ analysis or validation logic lives directly in this file.
 from __future__ import annotations
 
 import streamlit as st
-
+from app.styles.theme import load_theme
+from app.ui.components.hero import render_hero
+from app.ui.forecast_section import render_forecast_section
 from app.core.analyzer import build_overview, build_statistics, build_summary
-from app.ui.overview_section import render_overview_section
 from app.ui.sidebar import render_sidebar
+from app.ui.overview_section import render_overview_section
 from app.ui.statistics_section import render_statistics_section
 from app.ui.summary_section import render_summary_section
-from app.ui.upload_section import render_upload_section
+from app.ui.preview_section import render_preview_section
+from app.ui.health_section import render_health_section
+from app.ui.schema_section import render_schema_section
+from app.ui.dashboard_section import render_dashboard
+from app.ui.visualizations_section import render_visualizations_section
+from app.ui.ai_chat_section import render_ai_chat
+from app.ui.data_cleaning_section import render_data_cleaning
 
 
 def configure_page() -> None:
@@ -35,34 +43,113 @@ def configure_page() -> None:
     )
 
 
-def main() -> None:
-    """Run the DataPilot AI Streamlit application (Feature 1)."""
+def main():
     configure_page()
+    load_theme()
 
-    st.title("🧭 DataPilot AI")
-    st.caption("AI-Powered Business Intelligence Platform — Feature 1: CSV Upload & Data Overview")
-    st.markdown("---")
+    # Sidebar Navigation
+    page = render_sidebar()
 
-    dataframe = render_upload_section()
+    # Show Hero only on Dashboard
+    if page == "🏠 Dashboard":
+        render_hero()
+
+    # Get uploaded dataset from sidebar
+    dataframe = st.session_state.get("uploaded_df")
 
     if dataframe is None:
-        render_sidebar(overview=None)
+        st.info("👈 Upload a CSV file from the sidebar to continue.")
         return
 
+    # Build Analytics
     overview = build_overview(dataframe)
     summary = build_summary(dataframe)
     statistics = build_statistics(dataframe)
+    
 
-    render_sidebar(overview=overview)
+   # ==============================
+    # Dashboard
+    # ==============================
+    if page == "🏠 Dashboard":
 
-    st.markdown("---")
-    render_overview_section(dataframe, overview)
+        render_dashboard(
+            dataframe=dataframe,
+            overview=overview,
+            summary=summary,
+            statistics=statistics,
+        )
+    # ==============================
+    # Preview
+    # ==============================
+    elif page == "👀 Preview":
 
-    st.markdown("---")
-    render_summary_section(summary)
+       render_preview_section(dataframe)
+    # ==============================
+    # Health
+    # ==============================
+    elif page == "❤️ Health":
 
-    st.markdown("---")
-    render_statistics_section(statistics)
+        render_health_section(
+            dataframe,
+            overview,
+        )
+    # ==============================
+    # Schema
+    # ==============================
+    elif page == "🧩 Schema":
+
+        render_schema_section(
+            dataframe,
+            overview,
+        )
+    # ==============================
+    # Summary
+    # ==============================
+    elif page == "📋 Summary":
+
+        st.subheader("📋 Dataset Summary")
+
+        render_summary_section(summary)
+
+    # ==============================
+    # Statistics
+    # ==============================
+    elif page == "📈 Statistics":
+
+        st.subheader("📈 Statistical Summary")
+
+        render_statistics_section(statistics)
+    #================================
+    # Visualizations
+    #================================
+    
+    elif page == "📊 Visualizations":
+
+        render_visualizations_section(dataframe)
+    #====================
+    #Data cleaning
+    #===================
+    elif page == "🧹 Data Cleaning":
+        render_data_cleaning(dataframe)
+
+    # ==============================
+    # Future Features
+    # ==============================
+    elif page == "🤖 AI Data Analyst":
+
+        render_ai_chat(dataframe)
+
+    elif page == "🔮 Forecast":
+
+        render_forecast_section(dataframe)
+
+    elif page == "📄 Reports (Coming Soon)":
+
+        st.info("🚧 Reports will be available in Feature 2.")
+
+    elif page == "⚙️ Settings (Coming Soon)":
+
+        st.info("🚧 Settings will be available in Feature 2.")
 
 
 if __name__ == "__main__":
