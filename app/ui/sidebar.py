@@ -4,6 +4,7 @@ import streamlit as st
 from app.core.data_loader import load_csv
 from app.core.validators import validate_uploaded_file
 from app.core.exceptions import DataPilotError
+from app.core.api_client import upload_dataset
 
 
 def render_sidebar():
@@ -29,30 +30,77 @@ def render_sidebar():
             label_visibility="collapsed",
             help="CSV and Excel (.xlsx) files are supported.",
         )
-
         if uploaded_file is not None:
 
             try:
-                validate_uploaded_file(uploaded_file)
 
-                dataframe = load_csv(uploaded_file)
+                # ==========================================
+                # Upload through FastAPI
+                # ==========================================
 
-                st.session_state["uploaded_df"] = dataframe
-                st.session_state["uploaded_filename"] = uploaded_file.name
-
-                st.success("✅ Dataset Loaded")
-
-                st.caption(uploaded_file.name)
-                st.caption(
-                    f"{dataframe.shape[0]:,} rows • "
-                    f"{dataframe.shape[1]} columns"
+                result = upload_dataset(
+                    uploaded_file
                 )
 
-            except DataPilotError as error:
-                st.error(str(error))
+                # ==========================================
+                # Store backend dataset information
+                # ==========================================
+
+                st.session_state["dataset_id"] = (
+                    result["dataset_id"]
+                )
+
+                st.session_state["uploaded_filename"] = (
+                    result["filename"]
+                )
+
+                # ==========================================
+                # Load local DataFrame for existing UI
+                # ==========================================
+
+                uploaded_file.seek(0)
+
+                if uploaded_file.name.lower().endswith(".csv"):
+
+                    dataframe = pd.read_csv(
+                        uploaded_file
+                    )
+
+                else:
+
+                    dataframe = pd.read_excel(
+                        uploaded_file,
+                        engine="openpyxl",
+                    )
+
+                st.session_state["uploaded_df"] = dataframe
+
+                # ==========================================
+                # Success UI
+                # ==========================================
+
+                st.success(
+                    "✅ Dataset uploaded to FastAPI"
+                )
+
+                st.caption(
+                    result["filename"]
+                )
+
+                st.caption(
+                    f"{result['rows']:,} rows • "
+                    f"{result['columns']} columns"
+                )
+
+                st.caption(
+                    f"Dataset ID: {result['dataset_id']}"
+                )
 
             except Exception as error:
-                st.error(f"Unexpected error: {error}")
+
+                st.error(
+                    f"❌ Upload failed: {error}"
+                )
 
         st.divider()
 

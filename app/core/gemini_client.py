@@ -2,28 +2,30 @@ from __future__ import annotations
 
 import os
 
-import google.generativeai as genai
 from dotenv import load_dotenv
+from google import genai
 
 load_dotenv()
 
-API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-if not API_KEY:
-    raise ValueError(
-        "GEMINI_API_KEY not found in .env"
+if not GEMINI_API_KEY:
+    raise RuntimeError(
+        "GEMINI_API_KEY is not configured. "
+        "Add it to your .env file."
     )
 
-genai.configure(api_key=API_KEY)
-
-model = genai.GenerativeModel(
-    "gemini-2.5-flash"
+client = genai.Client(
+    api_key=GEMINI_API_KEY,
 )
 
 
 def ask_gemini(prompt: str) -> str:
-    """Send prompt to Gemini."""
+    """Send a prompt to Gemini and return the response."""
 
-    response = model.generate_content(prompt)
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt,
+    )
 
     return response.text
