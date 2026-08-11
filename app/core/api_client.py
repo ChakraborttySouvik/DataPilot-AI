@@ -2,10 +2,37 @@ from __future__ import annotations
 
 import requests
 
+from app.core.analyzer import DatasetOverview
+
 
 API_BASE_URL = "http://127.0.0.1:8000"
 
-def get_dataset_overview(dataset_id: str) -> dict:
+
+def upload_dataset(file) -> dict:
+    """Upload a dataset to FastAPI."""
+
+    files = {
+        "file": (
+            file.name,
+            file.getvalue(),
+            file.type,
+        )
+    }
+
+    response = requests.post(
+        f"{API_BASE_URL}/api/dataset/upload",
+        files=files,
+        timeout=120,
+    )
+
+    response.raise_for_status()
+
+    return response.json()
+
+
+def get_dataset_overview(
+    dataset_id: str,
+) -> DatasetOverview:
     """Get dataset overview from FastAPI."""
 
     response = requests.post(
@@ -18,86 +45,39 @@ def get_dataset_overview(dataset_id: str) -> dict:
 
     response.raise_for_status()
 
-    return response.json()
+    data = response.json()
 
+    return DatasetOverview(
+        row_count=int(data["row_count"]),
 
-def upload_dataset(file) -> dict:
-    """Upload a dataset to the FastAPI backend."""
+        column_count=int(
+            data["column_count"]
+        ),
 
-    response = requests.post(
-        f"{API_BASE_URL}/api/dataset/upload",
-        files={
-            "file": (
-                file.name,
-                file.getvalue(),
-                file.type,
-            )
+        size_bytes=int(
+            data["size_bytes"]
+        ),
+
+        column_names=[
+            str(column)
+            for column in data["column_names"]
+        ],
+
+        dtypes={
+            str(key): str(value)
+            for key, value in data["dtypes"].items()
         },
-        timeout=120,
-    )
 
-    response.raise_for_status()
-
-    return response.json()
-
-
-def get_analysis(dataset_id: str) -> dict:
-    """Get dataset overview from FastAPI."""
-
-    response = requests.post(
-        f"{API_BASE_URL}/api/analysis/overview",
-        json={
-            "dataset_id": dataset_id,
+        missing_values={
+            str(key): int(value)
+            for key, value in data["missing_values"].items()
         },
-        timeout=60,
+
+        total_missing_values=int(
+            data["total_missing_values"]
+        ),
+
+        duplicate_row_count=int(
+            data["duplicate_row_count"]
+        ),
     )
-
-    response.raise_for_status()
-
-    return response.json()
-
-
-def get_forecast(
-    dataset_id: str,
-    date_column: str,
-    target_column: str,
-    periods: int,
-    method: str,
-) -> dict:
-    """Generate a forecast through FastAPI."""
-
-    response = requests.post(
-        f"{API_BASE_URL}/api/forecast",
-        json={
-            "dataset_id": dataset_id,
-            "date_column": date_column,
-            "target_column": target_column,
-            "periods": periods,
-            "method": method,
-        },
-        timeout=120,
-    )
-
-    response.raise_for_status()
-
-    return response.json()
-
-
-def ask_ai(
-    dataset_id: str,
-    question: str,
-) -> dict:
-    """Ask Gemini through FastAPI."""
-
-    response = requests.post(
-        f"{API_BASE_URL}/api/ai/chat",
-        json={
-            "dataset_id": dataset_id,
-            "question": question,
-        },
-        timeout=120,
-    )
-
-    response.raise_for_status()
-
-    return response.json()
