@@ -32,7 +32,6 @@ from app.ui.schema_section import render_schema_section
 from app.ui.dashboard_section import render_dashboard
 from app.ui.visualizations_section import render_visualizations_section
 from app.core.api_client import get_dataset_overview
-from app.ui.ai_chat_section import render_ai_chat
 from app.ui.data_cleaning_section import render_data_cleaning
 
 
@@ -165,7 +164,7 @@ def main():
     # Future Features
     # ==============================
     elif page == "🤖 AI Data Analyst":
-
+        from app.ui.ai_chat_section import render_ai_chat
         render_ai_chat(dataframe)
 
     elif page == "🔮 Forecast":
