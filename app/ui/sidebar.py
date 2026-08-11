@@ -80,7 +80,7 @@ def render_sidebar():
                 # ==========================================
 
                 st.success(
-                    "✅ Dataset uploaded to FastAPI"
+                    "✅ Dataset loaded successfully"
                 )
 
                 st.caption(
